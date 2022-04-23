@@ -4,127 +4,89 @@
 struct arraylist
 {
     int* vetor;
-    int qtd; // quantidade de valores armazenados
-    int tam; // tamanho total do vetor
+    int qtdade; // quantidade de valores armazenados
+    int capacidade; // tamanho total do vetor
 };
 
-struct arraylist* initialize(int tam)
+struct arraylist* inicializar(int capacidade)
 {
     // 1- alocando a memoria para o struct
     struct arraylist* lista = (struct arraylist*)malloc(sizeof(struct arraylist));
 
     // 2 - alocando a memoria para o vetor (calloc inicializa tudo com 0)
-    lista -> vetor = (int*)calloc(tam, sizeof(int));
+    lista->vetor = (int*)calloc(capacidade, sizeof(int));
 
     // 3 - alocando os valores qtd e tam do struct
-    lista -> qtd = 0;
-    lista -> tam = tam;
+    lista->qtdade = 0;
+    lista->capacidade = capacidade;
 
     return lista;
 };
 
-void doubleSize(struct arraylist* lista){
-    lista = (struct arraylist*)realloc(lista -> vetor, 2* lista -> tam * sizeof(int));
-    lista -> tam = lista -> tam*2;
+void duplicarCapacidade(struct arraylist* lista) {
+    lista->vetor = (int*)realloc(lista->vetor, 2 * lista->capacidade * sizeof(int));
+    lista->capacidade = lista->capacidade * 2;
 }
 
-void insertElementEnd(struct arraylist* lista, int valor){
-    if(lista -> qtd == lista -> tam){
-        doubleSize(lista);
+void inserirElementoNoFim(struct arraylist* lista, int valor) {
+    if (lista->qtdade == lista->capacidade) {
+        duplicarCapacidade(lista);
     }
 
-    lista -> vetor[lista -> qtd] = valor;
-    lista -> qtd++;
+    lista->vetor[lista->qtdade] = valor;
+    lista->qtdade++;
 }
 
-void insertElementPosition(struct arraylist* lista, int valor, int pos){
-    if(pos >= 0 && pos < getSize(lista)){ // posicao informada eh valida
-        if(lista -> qtd == lista -> tam){ // a lista esta toda preenchida
-            doubleSize(lista);
-        } 
-
-        for(int i = getSize(lista); i >= pos; i--){
-            lista -> vetor[i] = lista -> vetor[i - 1];
+void inserirElementoEmPosicao(struct arraylist* lista, int valor, int posicao) {
+    if (posicao >= 0 && posicao <= lista->qtdade) { // posicao informada eh valida
+        if (lista->qtdade == lista->capacidade) { // a lista esta toda preenchida
+            duplicarCapacidade(lista);
         }
-        lista -> vetor[pos] = valor;
-        lista -> qtd++;
-    }
-}
 
-void removeElementEnd(struct arraylist* lista){
-    lista -> qtd--;
-}
-
-void removeElementPosition(struct arraylist* lista, int pos){
-    if(pos >= 0 && pos < getSize(lista)){ // posicao informada eh valida
-        for (int i = pos; i < getSize(lista) - 1; i++){
-            lista -> vetor[i] = lista -> vetor[i+1];
+        for (int i = lista->qtdade; i > posicao; i--) {
+            lista->vetor[i] = lista->vetor[i - 1];
         }
-        lista -> qtd--;
+        lista->vetor[posicao] = valor;
+        lista->qtdade++;
     }
 }
 
-void updateElementEnd(struct arraylist* lista, int valor){
-    lista -> vetor[lista -> qtd - 1] = valor;
+void removerElementoNoFim(struct arraylist* lista) {
+    lista->qtdade--;
 }
 
-void updateElementPosition(struct arraylist* lista, int valor, int pos){
-    if(pos >= 0 && pos < getSize(lista)){ // posicao informada eh valida
-        lista -> vetor[pos] = valor;
+void removerElementoEmPosicao(struct arraylist* lista, int posicao) {
+    if (posicao >= 0 && posicao <= lista->qtdade) { // posicao informada eh valida
+        for (int i = posicao; i < lista->qtdade - 1; i++) {
+            lista->vetor[i] = lista->vetor[i + 1];
+        }
+        lista->qtdade--;
     }
 }
 
-int getElement(struct arraylist* lista, int pos){
-    if(pos >=0 && pos < getSize(lista)){ // posicao informada eh valida
-        return lista -> vetor[pos];
-    } else {
+void atualizarElemento(struct arraylist* lista, int valor, int posicao) {
+    if (posicao >= 0 && posicao <= lista->qtdade) { // posicao informada eh valida
+        lista->vetor[posicao] = valor;
+    }
+}
+
+int obterElementoEmPosicao(struct arraylist* lista, int posicao) {
+    if (posicao >= 0 && posicao <= lista->qtdade) { // posicao informada eh valida
+        return lista->vetor[posicao];
+    }
+    else {
         return 0;
     }
 }
 
-int getSize(struct arraylist* lista){
-    return lista -> qtd;
-}
 
-void showList(struct arraylist* lista){
-    for(int i = 0; i < lista -> qtd; i++){
-        printf("%d ", lista -> vetor[i]);
+void exibirLista(struct arraylist* lista) {
+    printf("[");
+    for (int i = 0; i < lista->qtdade; i++) {
+        printf("%d", lista->vetor[i]);
+        if (i < lista->qtdade - 1) {
+            printf(", ");
+        }
     }
-    printf("\n");
-}
-
-
-int main(){
-
-    struct arraylist* lista = initialize(3);
-
-    for(int i = 0; i < 10; i++){
-        insertElementEnd(lista,i+1);
-    }
-    showList(lista);
-
-    removeElementEnd(lista);    
-    showList(lista);
-
-    removeElementPosition(lista, 4); // remove o numero 5
-    showList(lista);
-
-    insertElementPosition(lista, 5, 4); // insere o numero 6
-    showList(lista);
-
-    updateElementEnd(lista, 12);
-    showList(lista);
-
-    updateElementPosition(lista, 13, 2);
-    showList(lista);
-
-    insertElementEnd(lista,14);
-    insertElementEnd(lista,15);
-    insertElementEnd(lista,16);
-    insertElementEnd(lista,17);
-    showList(lista);
-
-    free(lista);
-
-    return 0;
+    printf("]");
 }

@@ -35,12 +35,11 @@ void inserirElementoNoFim(struct linkedlist* lista, int valor) {
         struct no* aux = lista->cabeca;
         //navega partindo da cabeça até chegar NULL
         
-        do {
+        while(aux->prox != NULL){
             aux = aux->prox;
-            if (aux == NULL) { // Chegamos no fim da lista
-                aux -> prox = novoNo;
-            }
-        } while (aux != NULL);
+        }
+
+        aux->prox = novoNo;
         
     }
     else {
@@ -55,59 +54,64 @@ void inserirElementoNoInicio(struct linkedlist* lista, int valor) {
     if(lista -> cabeca == NULL){
         lista -> cabeca = novoNo;
     } else {
-        struct no* aux = lista -> cabeca;
-        lista -> cabeca = novoNo -> prox;
-        novoNo -> prox = aux -> prox;
+        novoNo -> prox = lista -> cabeca;
+        lista -> cabeca = novoNo;
     }
     lista -> qtdade++;
 }
 
 void inserirElementoEmPosicao(struct linkedlist* lista, int valor, int posicao) {
-    if(posicaoEhValida(lista,posicao)){
-        struct no* novoNo = alocarNovoNo(valor);
-        struct no* aux = lista -> cabeca
+    if(posicao >= 0 && posicao <= lista->qtdade){
 
-        for(int i = 0; i < posicao; i++){
-            aux = aux -> prox;
+        if(posicao == 0){
+            inserirElementoNoInicio(lista,valor);
+        } else if (posicao == lista -> qtdade){
+            inserirElementoNoFim(lista,valor);
+        } else {
+            struct no* novoNo = alocarNovoNo(valor);
+            struct no* aux = lista -> cabeca;
+
+            for(int i = 0; i < posicao-1; i++){
+                aux = aux -> prox;
+            }
+
+            novoNo -> prox = aux -> prox;
+            aux -> prox = novoNo;
+
+            lista -> qtdade++;
         }
-
-        novoNo -> prox = aux -> prox;
-        aux -> prox = novoNo;
-
-        lista -> qtdade++;
     }
 }
 
 int obterElementoEmPosicao(struct linkedlist* lista, int posicao) {
-    if(posicaoEhValida(lista, posicao)){
-        if (lista->cabeca != NULL) {
+    if(posicao >= 0 && posicao < lista->qtdade){  
         struct no* aux = lista->cabeca;
         //navega partindo da cabeça até chegar NULL
         
-            while(aux != NULL){
+            for(int i = 0; i < posicao-1; i++){
                 aux = aux -> prox;
-                if(aux == NULL){
-                    return aux -> val;
-                }
-            }               
-        }
+            }
+            return aux -> val;              
     }
 }
 
 void removerElementoEmPosicao(struct linkedlist* lista, int posicao) {
-    if(posicaoEhValida(lista,posicao)){
+    if(posicao >= 0 && posicao < lista->qtdade){
         struct no* aux = lista -> cabeca;
-        struct no* aux2;
-
-        for(int i = 0; i < posicao; i++){
-            aux = aux -> prox;
-            if(i == posicao - 2){
-                aux2 = aux;
+        if(posicao == 0){
+            lista -> cabeca = aux -> prox;
+            free(aux);
+            lista -> qtdade--;
+        } else {
+            for(int i = 0; i < posicao - 1; i++){
+                aux = aux -> prox;
             }
+
+            struct no* aux2 = aux -> prox;
+            aux -> prox = aux2 -> prox;
+            free(aux2);
+            lista -> qtdade--;
         }
-        aux2 = aux;
-        free(aux);
-        lista -> qtdade--;
     }
 }
 
@@ -128,13 +132,5 @@ void imprimirLista(struct linkedlist* lista) {
     }
     else {
         printf("A lista está vazia!");
-    }
-}
-
-bool posicaoEhValida(struct linkedlist* lista, int posicao){
-    if(posicao >=0 && posicao < lista -> qtdade){
-        return true;
-    } else {
-        return false;
     }
 }
