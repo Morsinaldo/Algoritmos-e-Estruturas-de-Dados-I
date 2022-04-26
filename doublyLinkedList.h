@@ -39,18 +39,8 @@ void inserirElementoNoInicio(struct doublylinkedlist* lista, int valor){
     } else {
 
         novoNo -> prox = lista -> cabeca;
+        lista -> cabeca -> ant = novoNo;
         lista -> cabeca = novoNo;
-        //novoNo -> anterior = lista -> cabeca; // novoNo -> anterior deve ser nulo, pela estrutura da Doubly Linked List
-
-        // Como fazer o próximo apontar para o Novo nó? (Resolvido?)
-        struct no* aux = lista->cabeca;
-
-        //navega partindo da cabeça até chegar NULL
-        while(aux->prox != NULL){
-            aux = aux->prox;
-        }
-
-        aux -> ant = novoNo;
     }
     lista -> qtdade++;
 }
@@ -58,22 +48,15 @@ void inserirElementoNoInicio(struct doublylinkedlist* lista, int valor){
 void inserirElementoNoFim(struct doublylinkedlist* lista, int valor) {
     struct no* novoNo = alocarNovoNo(valor);
     
-    if (lista->cabeca != NULL) {
-        struct no* aux = lista->cabeca;
-        //navega partindo da cabeça até chegar NULL
-        
-        while(aux->prox != NULL){
-            aux = aux->prox;
-        }
-
-        aux->prox = novoNo;
-        
+    if(lista -> qtdade == 0){
+        inserirElementoNoInicio(lista,valor);
+    } else {
+        struct no* aux = lista -> cauda;
+        aux -> prox = novoNo;
+        novoNo -> ant = lista -> cauda;
+        lista -> cauda = novoNo;
+        lista -> qtdade++;
     }
-    else {
-        lista -> cabeca = novoNo;
-    }
-
-    lista -> qtdade++;
 }
 
 void inserirElementoEmPosicao(struct doublylinkedlist* lista, int valor, int posicao) {
@@ -85,22 +68,18 @@ void inserirElementoEmPosicao(struct doublylinkedlist* lista, int valor, int pos
             inserirElementoNoFim(lista,valor);
         } else {
             struct no* novoNo = alocarNovoNo(valor);
-            struct no* aux = lista -> cabeca;
+            struct no* antes = lista -> cabeca;
             int i = 0;
 
             for(i; i < posicao-1; i++){ // posicao -1?
-                aux = aux -> prox;
+                antes = antes -> prox;
             }
 
-            novoNo -> prox = aux -> prox;
-            aux -> prox = novoNo;
-            novoNo -> ant = aux;
-
-            for(i; i <= posicao; i++){
-                aux = aux -> prox;
-            }
-
-            aux -> ant = novoNo;
+            struct no* depois = antes -> prox;
+            novoNo -> ant = antes;
+            novoNo -> prox = depois;
+            antes -> prox = novoNo;
+            depois -> ant = novoNo;
 
             lista -> qtdade++;
         }
@@ -122,21 +101,41 @@ int obterElementoEmPosicao(struct doublylinkedlist* lista, int posicao) {
 void removerElementoEmPosicao(struct doublylinkedlist* lista, int posicao){
     if(posicao >= 0 && posicao < lista->qtdade){
         struct no* aux = lista -> cabeca;
-        if(posicao == 0){
+
+        if(lista -> qtdade == 1){
+            free(aux);
+            lista -> cabeca == NULL;
+            lista -> cauda = NULL;
+            lista -> qtdade--;
+
+            return;
+        } else if(posicao == 0){
+            struct no* depois = aux -> prox;
             lista -> cabeca = aux -> prox;
+
+            if(depois != NULL){
+                depois -> ant = NULL;
+            }
+            free(aux);
+            lista -> qtdade--;
+        } else if (posicao == lista -> qtdade - 1){
+            aux = lista -> cauda;
+            struct no* antes = aux -> ant;
+            antes -> prox = NULL;
+            lista -> cauda = antes;
             free(aux);
             lista -> qtdade--;
         } else {
-            for(int i = 0; i < posicao - 1; i++){
+            for(int i = 0; i < posicao; i++){
                 aux = aux -> prox;
             }
 
-            struct no* aux2 = aux -> prox;
-            struct no* aux3 = aux;
-            aux -> prox = aux2 -> prox;
-            free(aux2);
-            aux = aux -> prox;
-            aux -> ant = aux3;
+            struct no* antes = aux -> ant;
+            struct no* depois = aux -> prox;
+            antes -> prox = depois;
+            depois -> ant = antes;
+
+            free(aux);
             
             lista -> qtdade--;
         }

@@ -28,14 +28,26 @@ struct arrayqueue* inicializar(int tamArray) {
 void enfileirar(struct arrayqueue** fila, int val) {
     if((*fila) == NULL){
         (*fila) = inicializar(10);
+        
+    }
+    
+    if((*fila) -> qtdade == 0){
         (*fila) -> frente++;
-    } else if((*fila) -> tamanho == (*fila) -> qtdade){
-        return
+        (*fila) -> elementos[(*fila) -> qtdade] = val;
+        (*fila) -> qtdade++;
+        (*fila) -> tras++;
+    } else {
+        if((*fila) -> qtdade != (*fila -> tamanho){
+            (*fila) -> tras++;
+            (*fila) -> tras = (*fila) -> tras % (*filla) -> tamanho;
+            (*fila) -> elementos[(*fila)->tras] = val;
+            (*fila) -> qtdade++;
+        } else {
+            return;
+        }
     }
 
-    (*fila) -> elementos[(*fila) -> qtdade] = val;
-    (*fila) -> qtdade++;
-    (*fila) -> tras++;
+    
 }
 
 //retorne a constante INT_MIN se a fila for nula ou vazia

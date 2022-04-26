@@ -88,7 +88,7 @@ int obterElementoEmPosicao(struct linkedlist* lista, int posicao) {
         struct no* aux = lista->cabeca;
         //navega partindo da cabeça até chegar NULL
         
-            for(int i = 0; i < posicao-1; i++){
+            for(int i = 0; i < posicao; i++){
                 aux = aux -> prox;
             }
             return aux -> val;              

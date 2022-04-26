@@ -10,7 +10,7 @@ struct arraystack {
 };
 
 struct arraystack* inicializar(int tamArray){
-    struct arraystack* pilha = (struct arraystack*)malloc(sizeof(struct arraystack*));
+    struct arraystack* pilha = (struct arraystack*)malloc(sizeof(struct arraystack));
 
     pilha -> elementos = (int*)calloc(tamArray, sizeof(int));
     pilha -> tamanho = tamArray;
@@ -40,7 +40,7 @@ void empilhar(struct arraystack** pilha, int valor){
 
 //retornar true se a pilha for nula ou vazia
 bool vazia(struct arraystack* pilha) {
-    if(pilha -> qtdade == 0 || (pilha == NULL)){
+    if((pilha == NULL) || pilha -> qtdade == 0){
         return true;
     } else {
         return false;
@@ -57,22 +57,22 @@ void desempilhar(struct arraystack* pilha){
 }
 
 //retorne a constante INT_MIN se a pilha for nula ou vazia
+int topo(struct arraystack* pilha){
+    if((pilha == NULL) || pilha -> qtdade == 0){
+        return INT_MIN;
+    } else {
+        return pilha -> elementos[pilha -> qtdade - 1];
+    }
+}
+
+//retorne a constante INT_MIN se a pilha for nula ou vazia
 int desempilharRetornando(struct arraystack* pilha){
-    if(pilha -> qtdade <= 0 || (pilha == NULL)){
+    if((pilha == NULL) || pilha -> qtdade == 0){
         return INT_MIN;
     } else {
         int top = topo(pilha);
         pilha -> qtdade--;
         return top;
-    }
-}
-
-//retorne a constante INT_MIN se a pilha for nula ou vazia
-int topo(struct arraystack* pilha){
-    if(pilha -> qtdade <= 0 || (pilha == NULL)){
-        return INT_MIN;
-    } else {
-        return pilha -> elementos[pilha -> qtdade - 1];
     }
 }
 

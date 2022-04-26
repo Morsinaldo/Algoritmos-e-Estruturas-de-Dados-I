@@ -32,7 +32,7 @@ struct no* alocarNovoNo(int valor){
 
 //retornar true se a pilha for nula ou vazia
 bool vazia(struct linkedstack* pilha) {
-    if(pilha -> qtdade == 0 || (pilha == NULL)){
+    if((pilha == NULL) || pilha -> qtdade == 0){
         return true;
     } else {
         return false;
@@ -56,7 +56,7 @@ void empilhar(struct linkedstack** pilha, int valor){
 
 //decrementar qtdade se a pilha não estiver nula ou vazia
 void desempilhar(struct linkedstack* pilha) {
-    if(pilha -> qtdade <= 0 || (pilha == NULL)){
+    if((pilha == NULL) || pilha -> qtdade == 0){
         return;
     } else {
         struct no* aux = pilha -> topo -> prox;
@@ -67,22 +67,22 @@ void desempilhar(struct linkedstack* pilha) {
 }
 
 //retorne a constante INT_MIN se a pilha for nula ou vazia
+int topo(struct linkedstack* pilha){
+    if((pilha == NULL) || pilha -> qtdade == 0){
+        return INT_MIN;
+    } else {
+        return pilha -> topo -> val;
+    }
+}
+
+//retorne a constante INT_MIN se a pilha for nula ou vazia
 int desempilharRetornando(struct linkedstack* pilha) {
-    if(pilha -> qtdade <= 0 || (pilha == NULL)){
+    if((pilha == NULL) || pilha -> qtdade == 0){
         return INT_MIN;
     } else {
         int top = topo(pilha);
         desempilhar(pilha);
         return top;
-    }
-}
-
-//retorne a constante INT_MIN se a pilha for nula ou vazia
-int topo(struct linkedstack* pilha){
-    if(pilha -> qtdade <= 0 || (pilha == NULL)){
-        return INT_MIN;
-    } else {
-        return pilha -> topo -> val;
     }
 }
 
