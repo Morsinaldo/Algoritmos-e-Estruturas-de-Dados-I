@@ -49,9 +49,12 @@ void enfileirar(struct linkedqueue** fila, int val) {
     struct no* novoNo = alocarNovoNo(val);
     if((*fila) -> qtdade == 0){
         (*fila) -> frente = novoNo;
+        (*fila) -> tras = novoNo;
+        (*fila) -> qtdade++;
+    } else {
+        (*fila) -> tras -> prox = novoNo;
+        (*fila) -> tras = novoNo;
     }
-    (*fila) -> tras -> prox = novoNo;
-    (*fila) -> tras = novoNo;
 }
 
 //retorne a constante INT_MIN se a fila for nula ou vazia

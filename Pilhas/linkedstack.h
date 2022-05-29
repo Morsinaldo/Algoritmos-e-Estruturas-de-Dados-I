@@ -46,12 +46,11 @@ void empilhar(struct linkedstack** pilha, int valor){
 
     if((*pilha) == NULL){
         (*pilha) = inicializar();
-    } else {
-        novoNo -> prox = (*pilha) -> topo;
-        (*pilha) -> topo = novoNo;
-        (*pilha) -> qtdade++;
-        
     }
+    novoNo -> prox = (*pilha) -> topo;
+    (*pilha) -> topo = novoNo;
+    (*pilha) -> qtdade++;
+    
 }
 
 //decrementar qtdade se a pilha não estiver nula ou vazia
